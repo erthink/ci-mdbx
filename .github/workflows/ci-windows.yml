@@ -14,17 +14,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        toolset: [v141, v142, v143]
-        target: [x64, Win32, ARM, ARM64]
+        toolset: [v143]
+        target: [x64, Win32]
         build-type: [Debug, Release]
-        os: [windows-latest, windows-2019]
-        exclude:
-          - os: windows-latest
-            toolset: v141
-          - os: windows-2019
-            toolset: v143
-          - os: windows-latest
-            target: ARM
+        os: [windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
