@@ -72,13 +72,17 @@ function default_ci {
 git clean -x -f -d || echo "ignore 'git clean' error"
 git config --global submodule.fetchJobs 2
 
+function r7 {
+	"$@" || (sleep 1 && "$@") || (sleep 2 && "$@") || (sleep 3 && "$@") || (sleep 5 && "$@") || (sleep 7 && "$@") || (sleep 11 && "$@")
+}
+
 if [ -f url ]; then
-	git clone -q --single-branch --recurse-submodules $(cat url) subj && cd subj || failure git-clone
+	r7 git clone -q --single-branch --recurse-submodules $(cat url) subj && cd subj || failure git-clone
 else
-	git submodule sync --recursive || failure git-submodule-sync
-	git submodule update --init --recursive || failure git-submodule-update
-	#git submodule foreach --recursive 'git fetch $(test -f .git/shallow && echo --unshallow) --tags --prune --force' || failure git-submodule-fetch
-	git submodule foreach --recursive git fetch --update-shallow --tags --prune --force || failure git-submodule-fetch
+	r7 git submodule sync --recursive || failure git-submodule-sync
+	r7 git submodule update --init --recursive || failure git-submodule-update
+	#r7 git submodule foreach --recursive 'git fetch $(test -f .git/shallow && echo --unshallow) --tags --prune --force' || failure git-submodule-fetch
+	r7 git submodule foreach --recursive git fetch --update-shallow --tags --prune --force || failure git-submodule-fetch
 fi
 
 git describe --tags || git show --oneline -s
