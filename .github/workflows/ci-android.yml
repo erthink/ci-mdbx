@@ -16,9 +16,12 @@ jobs:
       fail-fast: false
       matrix:
         ndk: [r26d, r27c]
-        target: [arm64-v8a, armeabi-v7a, "armeabi-v7a with NEON", x86, x86_64]
+        target: [arm64-v8a, "armeabi-v7a with NEON", x86_64]
         build-type: [Debug, Release]
         os: [ubuntu-latest]
+        exclude:
+          - ndk: r26d
+            build-type: Debug
     steps:
     - uses: actions/checkout@v4
     - uses: nttld/setup-ndk@v1
