@@ -28,6 +28,8 @@ jobs:
             build-type: Debug
           - target: ARM
             build-type: Release
+          - os: windows-latest
+            target: ARM
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4

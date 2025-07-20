@@ -23,6 +23,8 @@ jobs:
             toolset: v141
           - os: windows-2019
             toolset: v143
+          - os: windows-latest
+            target: ARM
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
