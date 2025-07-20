@@ -36,6 +36,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: ci-step
+      env:
+        CI_MAKE_TARGET: ""
+        CXXSTD: "-std=gnu++${{ matrix.cxx }}"
       shell: bash
       run: |
         . ci.sh "-A|${{ matrix.target }}|-T|${{ matrix.toolset }}|-DCMAKE_BUILD_TYPE=${{ matrix.build-type }}|-DCMAKE_CXX_STANDARD=${{ matrix.cxx }}" \

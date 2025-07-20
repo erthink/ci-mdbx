@@ -15,6 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         toolset: [v143]
+        dll: [ON, OFF]
+        without_crt: [ON, OFF]
         target: [x64, Win32]
         build-type: [Debug, Release]
         os: [windows-latest]
@@ -22,7 +24,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: ci-step
+      env:
+        CI_MAKE_TARGET: ""
       shell: bash
       run: |
-        . ci.sh "-A|${{ matrix.target }}|-T|${{ matrix.toolset }}|-DCMAKE_BUILD_TYPE=${{ matrix.build-type }}" \
-           "--config|${{ matrix.build-type }}" "--build-config|${{ matrix.build-type }}"
+        . ci.sh "-A|${{ matrix.target }}|-T|${{ matrix.toolset }}|-DCMAKE_BUILD_TYPE=${{ matrix.build-type }}|-DMDBX_BUILD_SHARED_LIBRARY:BOOL=${{ matrix.dll }}|-DMDBX_WITHOUT_MSVC_CRT:BOOL=${{ matrix.without_crt }}" \
+          "--config|${{ matrix.build-type }}" "--build-config|${{ matrix.build-type }}"
