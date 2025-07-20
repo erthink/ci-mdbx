@@ -1,0 +1,25 @@
+name: ci-posix
+
+env:
+  CI: GITHUB
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+on: [push]
+
+jobs:
+  ci-job:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-12, ubuntu-20.04, macos-11]
+        build-type: [Debug, Release]
+    steps:
+    - uses: actions/checkout@v2
+    - name: ci-step
+      shell: bash
+      run: |
+        . ci.sh "-DCMAKE_BUILD_TYPE=${{ matrix.build-type }}"

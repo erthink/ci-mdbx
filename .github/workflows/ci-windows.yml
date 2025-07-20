@@ -1,0 +1,27 @@
+name: ci-windows
+
+env:
+  CI: GITHUB
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+on: [push]
+
+jobs:
+  ci-job:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        build-type: [Debug, Release]
+        target: [x64, Win32, ARM, ARM64]
+        toolset: [v141, v142, v143]
+    steps:
+    - uses: actions/checkout@v2
+    - name: ci-step
+      shell: bash
+      run: |
+        . ci.sh "-A|${{ matrix.target }}|-T|${{ matrix.toolset }}|-DCMAKE_BUILD_TYPE=${{ matrix.build-type }}" \
+           "--config|${{ matrix.build-type }}" "--build-config|${{ matrix.build-type }}"
