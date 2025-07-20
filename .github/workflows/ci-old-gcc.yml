@@ -15,11 +15,11 @@ jobs:
     container:
       image: library/gcc:4
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: update-ssl-certs
       shell: bash
       run: ./update-ssl-certs.sh
-    - name: ci
+    - name: ci-step
       shell: bash
       run: ./ci.sh
   gcc-5:
@@ -27,11 +27,11 @@ jobs:
     container:
       image: library/gcc:5
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: update-ssl-certs
       shell: bash
       run: ./update-ssl-certs.sh
-    - name: ci
+    - name: ci-step
       shell: bash
       run: ./ci.sh
   gcc-6:
@@ -39,11 +39,11 @@ jobs:
     container:
       image: library/gcc:6
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: update-ssl-certs
       shell: bash
       run: ./update-ssl-certs.sh
-    - name: ci
+    - name: ci-step
       shell: bash
       run: ./ci.sh
   gcc-7:
@@ -51,11 +51,11 @@ jobs:
     container:
       image: library/gcc:7
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: update-ssl-certs
       shell: bash
       run: ./update-ssl-certs.sh
-    - name: ci
+    - name: ci-step
       shell: bash
       run: ./ci.sh
   gcc-8:
@@ -63,11 +63,11 @@ jobs:
     container:
       image: library/gcc:8
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: update-ssl-certs
       shell: bash
       run: ./update-ssl-certs.sh
-    - name: ci
+    - name: ci-step
       shell: bash
       run: ./ci.sh
   gcc-9:
@@ -75,10 +75,10 @@ jobs:
     container:
       image: library/gcc:9
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: update-ssl-certs
       shell: bash
       run: ./update-ssl-certs.sh
-    - name: ci
+    - name: ci-step
       shell: bash
       run: ./ci.sh
