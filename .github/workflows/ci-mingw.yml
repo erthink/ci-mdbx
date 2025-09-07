@@ -33,8 +33,8 @@ jobs:
       env:
         CI_MAKE_TARGET: smoke
       run: |
-        export "PATH=/c/ProgramData/mingw64/mingw64/bin:$PATH" && \
-        export "PATH=/c/programdata/mingw64/mingw64/bin:$PATH" && \
+        echo "initial-PATH=$PATH" && \
+        export "PATH=/c/mingw64/bin:/c/programdata/mingw64/mingw64/bin:$PATH" && \
         export MDBX_BUILD_OPTIONS=$(if [ "${{ matrix.build-type }}" = 'Debug' ]; then echo '-DMDBX_FORCE_ASSERTIONS=1'; else echo '-DNDEBUG=1'; fi) && \
         export MDBX_BUILD_CXX=$(if [ "${{ matrix.without_crt }}" = 'OFF' ]; then echo 'YES'; else echo 'NO'; fi) && \
         . ci.sh "-G|MinGW Makefiles|-DCMAKE_BUILD_TYPE=${{ matrix.build-type }}|-DMDBX_BUILD_SHARED_LIBRARY:BOOL=${{ matrix.dll }}|-DMDBX_WITHOUT_MSVC_CRT:BOOL=${{ matrix.without_crt }}"
