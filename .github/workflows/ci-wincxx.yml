@@ -28,10 +28,10 @@ jobs:
             toolset: v143
           - os: windows-2022
             cxx: 20
-          - target: x64
-            build-type: Debug
+#          - target: x64
+#            build-type: Debug
           - target: ARM64
-            build-type: Release
+            toolset: v142
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
