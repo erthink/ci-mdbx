@@ -1,0 +1,59 @@
+name: ci-dist
+
+env:
+  CI: GITHUB
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+on: [push]
+
+jobs:
+  dist-macos:
+    runs-on: [macos-latest]
+    steps:
+    - name: brew
+      shell: bash
+      run: brew install gnu-sed gnu-tar
+    - uses: actions/checkout@v4
+    - name: dist
+      shell: bash
+      env:
+#        CI_ACTION: "make dist"
+        CI_MAKE_TARGET: dist
+      run: |
+        export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH" && \
+        ./ci.sh || (cd subj && echo "===== @dist-check.log" && cat @dist-check.log && echo "===== @dist-check.err" && cat @dist-check.err; false)
+
+  dist-linux-gcc:
+    runs-on: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v4
+    - name: ci-step
+      shell: bash
+      env:
+        CC: gcc
+        CXX: g++
+#        CI_ACTION: "make dist"
+        CI_MAKE_TARGET: dist
+      run: |
+        ./ci.sh || (cd subj && echo "===== @dist-check.log" && cat @dist-check.log && echo "===== @dist-check.err" && cat @dist-check.err; false)
+
+  dist-linux-clang:
+    runs-on: [ubuntu-latest]
+    steps:
+    - name: clean-llvm
+      shell: bash
+      run: |
+        apt list --installed 'llvm-*' | grep 'llvm-[0-9]' | grep -v "llvm-`clang --version | sed -n 's/^\(.\+version \)\([0-9]\{1,\}\)\(\..\+\)$/\2/p'`" | cut -d / -f 1 | xargs -r sudo apt remove -y
+    - uses: actions/checkout@v4
+    - name: ci-step
+      shell: bash
+      env:
+        CC: clang
+        CXX: clang++
+#        CI_ACTION: "make dist"
+        CI_MAKE_TARGET: dist
+      run: |
+        ./ci.sh || (cd subj && echo "===== @dist-check.log" && cat @dist-check.log && echo "===== @dist-check.err" && cat @dist-check.err; false)

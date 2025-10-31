@@ -87,7 +87,7 @@ fi
 
 git describe --tags || git show --oneline -s
 
-if [ -z "$CI_ACTION" ]; then
+if [ -z "${CI_ACTION:-}" ]; then
 	if [ -x test/ci.sh ]; then
 		CI_ACTION=./test/ci.sh
 	elif [ -x ci.sh ]; then
