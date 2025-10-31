@@ -17,8 +17,8 @@ set -euxo pipefail
 
 function provide_toolchain {
 	set +ex
-	export CC="$((which cc || which gcc || which clang || which true) 2>/dev/null)"
-	export CXX="$((which c++ || which g++ || which clang++ || which true) 2>/dev/null)"
+	export CC="$((which ${CC:-cc} || which gcc || which clang || which true) 2>/dev/null)"
+	export CXX="$((which ${CXX:-c++} || which g++ || which clang++ || which true) 2>/dev/null)"
 	echo "CC: ${CC} => $($CC --version | head -1)"
 	echo "CXX: ${CXX} => $($CXX --version | head -1)"
 	if [ -z "$(which cmake 2>/dev/null)" -o -z "$(which ninja 2>/dev/null)" ]; then
