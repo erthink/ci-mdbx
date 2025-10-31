@@ -87,12 +87,14 @@ fi
 
 git describe --tags || git show --oneline -s
 
-if [ -x test/ci.sh ]; then
-	ci_script=./test/ci.sh
-elif [ -x ci.sh ]; then
-	ci_script=./ci.sh
-else
-	ci_script=default_ci
+if [ -z "$CI_ACTION" ]; then
+	if [ -x test/ci.sh ]; then
+		CI_ACTION=./test/ci.sh
+	elif [ -x ci.sh ]; then
+		CI_ACTION=./ci.sh
+	else
+		CI_ACTION=default_ci
+	fi
 fi
 
-$ci_script || failure $ci_script
+$CI_ACTION || failure $CI_ACTION
