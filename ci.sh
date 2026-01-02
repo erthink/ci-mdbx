@@ -69,6 +69,7 @@ function default_ci {
 	fi
 }
 
+git config --global --add safe.directory $(pwd) || echo "ignore 'git set-dir-safe' error"
 git clean -x -f -d || echo "ignore 'git clean' error"
 git config --global submodule.fetchJobs 2
 
