@@ -22,12 +22,13 @@ function provide_toolchain {
 	echo "CC: ${CC} => $($CC --version | head -1)"
 	echo "CXX: ${CXX} => $($CXX --version | head -1)"
 	if [ -z "$(which cmake 2>/dev/null)" -o -z "$(which ninja 2>/dev/null)" ]; then
+		SUDO=$(which sudo 2>&-)
 		if [ -n "$(which apt 2>/dev/null)" ]; then
-			sudo apt update && sudo apt install -y cmake ninja-build libgtest-dev
+			${SUDO} apt update && sudo apt install -y cmake ninja-build libgtest-dev
 		elif [ -n "$(which dnf 2>/dev/null)" ]; then
-			sudo dnf install -y cmake ninja-build gtest-devel
+			${SUDO} dnf install -y cmake ninja-build gtest-devel
 		elif [ -n "$(which yum 2>/dev/null)" ]; then
-			sudo yum install -y cmake ninja-build gtest-devel
+			${SUDO} yum install -y cmake ninja-build gtest-devel
 		fi
 	fi
 	CMAKE_VERSION=$(eval expr $(cmake --version | sed -n 's/cmake version \([0-9]\{1,\}\)\.\([0-9]\{1,\}\)\.\([0-9]\{1,\}\)/\10000 + \200 + \3/p'))
