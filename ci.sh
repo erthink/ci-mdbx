@@ -21,7 +21,8 @@ function provide_toolchain {
 	export CXX="$((which ${CXX:-c++} || which g++ || which clang++ || which true) 2>/dev/null)"
 	echo "CC: ${CC} => $($CC --version | head -1)"
 	echo "CXX: ${CXX} => $($CXX --version | head -1)"
-	if [ -z "$(which cmake 2>/dev/null)" -o -z "$(which ninja 2>/dev/null)" ]; then
+	CMAKE="$(which cmake 2>/dev/null)"
+	if [ -z "${CMAKE}" -o -z "$(which ninja 2>/dev/null)" ]; then
 		SUDO=$(which sudo 2>&-)
 		if [ -n "$(which apt 2>/dev/null)" ]; then
 			${SUDO} apt update && sudo apt install -y cmake ninja-build libgtest-dev
@@ -30,9 +31,10 @@ function provide_toolchain {
 		elif [ -n "$(which yum 2>/dev/null)" ]; then
 			${SUDO} yum install -y cmake ninja-build gtest-devel
 		fi
+		CMAKE="$(which cmake 2>/dev/null) | echo false"
 	fi
-	CMAKE_VERSION=$(eval expr $(cmake --version | sed -n 's/cmake version \([0-9]\{1,\}\)\.\([0-9]\{1,\}\)\.\([0-9]\{1,\}\)/\10000 + \200 + \3/p'))
-	echo "CMAKE: $(which cmake 2>/dev/null) => $(cmake --version | head -1) ($CMAKE_VERSION)"
+	CMAKE_VERSION=$(eval expr $("${CMAKE}" --version | sed -n 's/cmake version \([0-9]\{1,\}\)\.\([0-9]\{1,\}\)\.\([0-9]\{1,\}\)/\10000 + \200 + \3/p' || echo '00000'))
+	echo "CMAKE: ${CMAKE} => $(${CMAKE} --version | head -1) ($CMAKE_VERSION)"
 	set -euxo pipefail
 }
 
@@ -44,11 +46,11 @@ function default_test {
 
 function default_build {
 	local cmake_use_ninja=""
-	if cmake --help | grep -iq ninja && [ -n "$(which ninja 2>/dev/null)" ] && echo " ${config_args[@]+"${config_args[@]}"}" | grep -qv -e ' -[GTA] '; then
+	if "${CMAKE}" --help | grep -iq ninja && [ -n "$(which ninja 2>/dev/null)" ] && echo " ${config_args[@]+"${config_args[@]}"}" | grep -qv -e ' -[GTA] '; then
 		echo "NINJA: $(which ninja 2>/dev/null) => $(ninja --version | head -1)"
 		cmake_use_ninja="-G Ninja"
 	fi
-	cmake ${cmake_use_ninja} "${config_args[@]+"${config_args[@]}"}" .. && cmake --build . "${build_args[@]+"${build_args[@]}"}"
+	"${CMAKE}" ${cmake_use_ninja} "${config_args[@]+"${config_args[@]}"}" .. && "${CMAKE}" --build . "${build_args[@]+"${build_args[@]}"}"
 }
 
 function default_ci {
